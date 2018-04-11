@@ -13,7 +13,7 @@ client.on('message', message => {
     if(message.content.startsWith("!matchmake")){
        message.delete();
        var params = message.content.split(' ');
-       if(params.length < 3 || regions.indexOf(params[1].toLowerCase()) < 0 || !params[2].startWith("steam://joinlobby/312530/")) {invalidSyntax(message); return;}
+       if(params.length < 3 || regions.indexOf(params[1].toLowerCase()) < 0 || !params[2].startsWith("steam://joinlobby/312530/")) {invalidSyntax(message); return;}
        
        var maxWait = "and did not specify for how long he was gonna have and open lobby";
        if(params.length > 3) maxWait = "and is prepared to wait a staggering "+(params.splice(3,params.length-3).join(' '))+" before he closes the lobby";
