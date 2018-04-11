@@ -11,7 +11,10 @@ var regions = Object.keys(images);
 
 client.on('message', message => {
     if(message.content.startsWith("!matchmake")){
-       message.delete();
+       if(message.deletable)
+          message.delete();
+       console.log(message.channel.id+": name = "+message.channel.name);
+        
        var params = message.content.split(' ');
        if(params.length < 3 || regions.indexOf(params[1].toLowerCase()) < 0 || !params[2].startsWith("steam://joinlobby/312530/")) {invalidSyntax(message); return;}
        
