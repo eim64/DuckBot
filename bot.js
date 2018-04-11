@@ -14,6 +14,9 @@ var regions = Object.keys(images);
 client.on('message', message => {
     if(message.channel.name === "matchmaking"){
         var loweredContent = message.content.toLowerCase();
+        
+        console.log(Object.values(message.member.roles));
+        
         if( loweredContent.startsWith("!matchmake")){
             if(message.deletable) message.delete();
        
