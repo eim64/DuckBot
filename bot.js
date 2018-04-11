@@ -4,19 +4,16 @@ const client = new Discord.Client();
 client.on('ready', () => {
     console.log('I am ready!');
 });
-
 var images = {'na': 'https://cdn.discordapp.com/attachments/429801984460062720/433673377270726657/Uplink_-_World_Map_NA.gif', 
               'eu': "https://cdn.discordapp.com/attachments/429801984460062720/433673470614831134/Uplink_-_World_Map_EU.gif", 
               'anz':'https://cdn.discordapp.com/attachments/429801984460062720/433673374934368276/Uplink_-_World_Map_ANZ.gif'};
 var regions = Object.keys(images);
-    
 
 client.on('message', message => {
     if(message.channel.name === "matchmaking"){
         var loweredContent = message.content.toLowerCase();
         
-        console.log(Object.values(message.member.roles));
-        
+        var MMRole = message.guild.roles.find("name", "WaitingForAMatch");
         if( loweredContent.startsWith("!matchmake")){
             if(message.deletable) message.delete();
        
@@ -29,15 +26,15 @@ client.on('message', message => {
         
         }else if(loweredContent.startsWith("!joinmm")){
             if(message.deleteable) message.delete();
+            
             message.reply('Is now waiting for matches');
-            message.member.addRole('WaitingForAMatch');
+            message.member.addRole(MMRole);
         
         }else if(loweredContent.startsWith("!leavemm")){
             if(message.deleteable) message.delete();
-            //if(message.member.roles.find("name", "WaitingForAMatch"))){
-                message.reply('is no longer waiting for a match');
-                message.member.removeRole('WaitingForAMatch');
-            //}
+            
+            message.reply('is no longer waiting for a match');
+            message.member.removeRole(MMRole);
             
         }
     }
