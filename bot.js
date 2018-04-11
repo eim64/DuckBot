@@ -20,19 +20,20 @@ client.on('message', message => {
             var params = message.content.split(' ');
             if(params.length < 3 || regions.indexOf(params[1].toLowerCase()) < 0 || !params[2].startsWith("steam://joinlobby/312530/")) {invalidSyntax(message); return;}
        
-            var maxWait = "and did not specify for how long he was gonna have an open lobby";
-            if(params.length > 3) maxWait = "and is prepared to wait a staggering "+(params.splice(3,params.length-3).join(' '))+" before he closes the lobby";
-            message.reply("@Wants to get his ass handed to him:\n"+params[2]+"\n"+maxWait,{files:[images[params[1].toLowerCase()]]});
+            var maxWait = "And did not specify for how long he was gonna have an open lobby";
+            if(params.length > 3) maxWait = "And is prepared to wait a staggering "+(params.splice(3,params.length-3).join(' '))+" before he closes the lobby";
+            message.send("Hey @WaitingForAMatch, @"+message.author.username+" Wants to get his ass handed to him:\n"+params[2]+"\n"+maxWait,{files:[images[params[1].toLowerCase()]]});
         
         }else if(loweredContent.startsWith("!joinmm")){
-            if(message.deleteable) message.delete();
+            if(message.deletable) message.delete();
             
+            if(message.member.roles.has(MMRole.id)) return;
             message.reply('Is now waiting for matches');
             message.member.addRole(MMRole);
         
         }else if(loweredContent.startsWith("!leavemm")){
-            if(message.deleteable) message.delete();
-            
+            if(message.deletable) message.delete();
+            if(!message.member.roles.has(MMRole.id)) return;
             message.reply('is no longer waiting for a match');
             message.member.removeRole(MMRole);
             
