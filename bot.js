@@ -38,7 +38,7 @@ client.on('message', message => {
                 return;
             }
             
-            if(previousLobbies.indexOF(linkParams[4]) < 0){
+            if(previousLobbies.indexOf(linkParams[4]) < 0){
                 previousLobbies.push(linkParams[4]);        
             }else return;                                   //already used lobbyID
             
