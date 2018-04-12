@@ -67,7 +67,7 @@ client.on('message', message => {
             
         }else if(loweredContent.startsWith("!closelobby")){
             if(message.deletable) message.delete();
-            
+            console.log(openLobbies);
             if(!openLobbies.has(message.author.id)) return;
             
             var msg = openLobbies.get(message.author.id);
