@@ -74,7 +74,7 @@ client.on('message', message => {
             
             var msg = openLobbies.get(message.author.id);
             msg.delete();
-            openLobbies.remove(message.author.id);
+            openLobbies.delete(message.author.id);
         }
     }
 });
