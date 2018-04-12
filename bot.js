@@ -9,6 +9,10 @@ var images = {'na': 'https://cdn.discordapp.com/attachments/429801984460062720/4
               'anz':'https://cdn.discordapp.com/attachments/429801984460062720/433673374934368276/Uplink_-_World_Map_ANZ.gif'};
 var regions = Object.keys(images);
 
+
+var openLobbies = new Map();
+var previousLobbies = [];
+
 client.on('message', message => {
     if(message.channel.name === "matchmaking"){
         var loweredContent = message.content.toLowerCase();
@@ -17,32 +21,64 @@ client.on('message', message => {
         if( loweredContent.startsWith("!matchmake")){
             if(message.deletable) message.delete();
        
+            if(openLobbies.has(message.author.id)) {
+                message.reply("You supposedly already have a lobby open! Type ***!closelobby*** to remove previous message");
+            }
+            
             var params = message.content.split(' ');
-            if(params.length < 3 || regions.indexOf(params[1].toLowerCase()) < 0 || !params[2].startsWith("steam://joinlobby/312530/")) {invalidSyntax(message); return;}
-       
-            var maxWait = "And did not specify for how long he was gonna have an open lobby";
-            if(params.length > 3) maxWait = "And is prepared to wait a staggering "+(params.splice(3,params.length-3).join(' '))+" before he closes the lobby";
-            message.send("Hey @WaitingForAMatch, @"+message.author.username+" Wants to get his ass handed to him:\n"+params[2]+"\n"+maxWait,{files:[images[params[1].toLowerCase()]]});
+            var userRegion, inviteLink, waitTime,linkParams;
+            
+            if(params.length < 4 ||                                                 //not enough parameters
+            regions.indexOf((userRegion = params[1].toLowerCase())) < 0 ||          //is not a valid region
+            !(inviteLink = params[2]).startsWith("steam://joinlobby/312530/")||     //invite link is not valid
+            (waitTime = parseInt(params[3])) == NaN||                               //wait time is not a number
+            (linkParams = inviteLink.split('/')).length != 6) {                     //invite link lacks lobbyID/userID
+                
+                invalidSyntax(message); 
+                return;
+            }
+            
+            if(previousLobbies.indexOF(linkParams[4]) < 0){
+                previousLobbies.push(linkParams[4]);        
+            }else return;                                   //already used lobbyID
+            
+            var waitMilliseconds = waitTime*60000;
+            openLobbies.set(message.author.id,message);
+            message.send("Hey @WaitingForAMatch, @"+message.author.username+" Wants to get his ass handed to him:\n"+params[2]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[1].toLowerCase()]]})
+                .then(sent=>{
+                    if(openLobbies.remove(message.author.id)) sent.delete(waitMilliseconds);
+                });
         
         }else if(loweredContent.startsWith("!joinmm")){
             if(message.deletable) message.delete();
             
             if(message.member.roles.has(MMRole.id)) return;
+            
             message.reply('Is now waiting for matches');
             message.member.addRole(MMRole);
         
         }else if(loweredContent.startsWith("!leavemm")){
             if(message.deletable) message.delete();
+            
             if(!message.member.roles.has(MMRole.id)) return;
+            
             message.reply('is no longer waiting for a match');
             message.member.removeRole(MMRole);
             
+        }else if(loweredContent.startsWith("!closelobby")){
+            if(message.deletable) message.delete();
+            
+            if(!openLobbies.has(message.author.id)) return;
+            
+            var msg = openLobbies.get(message.author.id);
+            msg.delete();
+            openLobbies.remove(message.author.id);
         }
     }
 });
 
 function invalidSyntax(message){
-    message.reply("invalid syntax!\n!matchmake <"+regions.join()+"> <invite link> <optional: max wait message>");
+    message.reply("invalid syntax!\n!matchmake <"+regions.join()+"> <invite link> <time until close (minutes)>");
 }
 
 client.login(process.env.BOT_TOKEN);
