@@ -43,9 +43,10 @@ client.on('message', message => {
             }else return;                                   //already used lobbyID
             
             var waitMilliseconds = waitTime*60000;
-            openLobbies.set(message.author.id,message);
+            
             message.channel.send("Hey "+MMRole+", "+message.author+" Wants to get his ass handed to him:\n"+params[2]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[1].toLowerCase()]]})
                 .then(sent=>{
+                    openLobbies.set(message.author.id,sent);
                     if(openLobbies.delete(message.author.id)) sent.delete(waitMilliseconds);
                 });
         
@@ -67,7 +68,6 @@ client.on('message', message => {
             
         }else if(loweredContent.startsWith("!closelobby")){
             if(message.deletable) message.delete();
-            console.log(openLobbies);
             if(!openLobbies.has(message.author.id)) return;
             
             var msg = openLobbies.get(message.author.id);
