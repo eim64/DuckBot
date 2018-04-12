@@ -48,7 +48,8 @@ client.on('message', message => {
                 .then(sent=>{
                     openLobbies.set(message.author.id,sent);
                     sent.delete(waitMilliseconds).then(setTimeout(function(){
-                        openLobbies.delete(message.author.id)},waitMilliseconds);
+                        openLobbies.delete(message.author.id);
+                    },waitMilliseconds);
                 });
         
         }else if(loweredContent.startsWith("!joinmm")){
