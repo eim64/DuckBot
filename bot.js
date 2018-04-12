@@ -44,9 +44,9 @@ client.on('message', message => {
             
             var waitMilliseconds = waitTime*60000;
             openLobbies.set(message.author.id,message);
-            message.channel.send("Hey @WaitingForAMatch, @"+message.author.username+" Wants to get his ass handed to him:\n"+params[2]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[1].toLowerCase()]]})
+            message.channel.send("Hey ${MMRole}, @${message.author} Wants to get his ass handed to him:\n"+params[2]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[1].toLowerCase()]]})
                 .then(sent=>{
-                    if(openLobbies.remove(message.author.id)) sent.delete(waitMilliseconds);
+                    if(openLobbies.delete(message.author.id)) sent.delete(waitMilliseconds);
                 });
         
         }else if(loweredContent.startsWith("!joinmm")){
