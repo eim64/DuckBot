@@ -49,7 +49,7 @@ client.on('message', message => {
                     openLobbies.set(message.author.id,sent);
                     sent.delete(waitMilliseconds).then(setTimeout(function(){
                         openLobbies.delete(message.author.id);
-                    },waitMilliseconds);
+                    },waitMilliseconds));
                 });
         
         }else if(loweredContent.startsWith("!joinmm")){
