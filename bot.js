@@ -47,7 +47,7 @@ client.on('message', message => {
             message.channel.send("Hey "+MMRole+", "+message.author+" Wants to get his ass handed to him:\n"+params[2]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[1].toLowerCase()]]})
                 .then(sent=>{
                     openLobbies.set(message.author.id,sent);
-                    sent.delete(waitMilliseconds).then(openLobbies.delete(message.author.id));
+                    sent.delete(waitMilliseconds).then({openLobbies.delete(message.author.id);console.log("removed message: "+sent.content)});
                 });
         
         }else if(loweredContent.startsWith("!joinmm")){
@@ -68,7 +68,7 @@ client.on('message', message => {
             
         }else if(loweredContent.startsWith("!closelobby")){
             if(message.deletable) message.delete();
-            if(!openLobbies.has(message.author.id)) return;
+            if(!openLobbies.has(message.author.id)) {console.log("user not found!"); return;}
             
             var msg = openLobbies.get(message.author.id);
             msg.delete();
