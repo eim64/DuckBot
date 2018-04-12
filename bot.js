@@ -47,7 +47,7 @@ client.on('message', message => {
             message.channel.send("Hey "+MMRole+", "+message.author+" Wants to get his ass handed to him:\n"+params[2]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[1].toLowerCase()]]})
                 .then(sent=>{
                     openLobbies.set(message.author.id,sent);
-                    sent.delete(waitMilliseconds).then({openLobbies.delete(message.author.id);console.log("removed message: "+sent.content)});
+                    sent.delete(waitMilliseconds).then({openLobbies.delete(message.author.id);console.log("removed message: "+sent.content);});
                 });
         
         }else if(loweredContent.startsWith("!joinmm")){
