@@ -52,8 +52,8 @@ commands.set("!matchmake",function(message,params){
     .then(sent=>{
          openLobbies.set(message.author.id,sent);
          sent.delete(waitMilliseconds).then(setTimeout(function(){
-              openLobbies.delete(message.author.id).catch();
-         },waitMilliseconds));
+              openLobbies.delete(message.author.id);
+         },waitMilliseconds),function(err){});
     }); 
 });
 
