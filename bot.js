@@ -23,7 +23,7 @@ client.on('message', message => {
         if(!commands.has(params[0])) return;
         
         MMRole = message.guild.roles.find("name", "WaitingForAMatch");
-        if(message.deletable) message.delete();
+        if(message.deletable) message.delete().catch();
         commands.get(params[0])(message,params.splice(1,params.length-1));
     }
 });
@@ -52,7 +52,7 @@ commands.set("!matchmake",function(message,params){
     .then(sent=>{
          openLobbies.set(message.author.id,sent);
          sent.delete(waitMilliseconds).then(setTimeout(function(){
-              openLobbies.delete(message.author.id);
+              openLobbies.delete(message.author.id).catch();
          },waitMilliseconds));
     }); 
 });
@@ -61,7 +61,7 @@ commands.set("!closelobby",function(message,params){
    if(!openLobbies.has(message.author.id)) {console.log("user not found!"); return;}
             
    var msg = openLobbies.get(message.author.id);
-   msg.delete();
+   msg.delete().catch();
    openLobbies.delete(message.author.id); 
 });
 
