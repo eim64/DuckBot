@@ -1,14 +1,18 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+
 client.on('ready', () => {
     console.log('I am ready!');
 });
-var images = {'na': 'https://cdn.discordapp.com/attachments/429801984460062720/433673377270726657/Uplink_-_World_Map_NA.gif', 
-              'eu': "https://cdn.discordapp.com/attachments/429801984460062720/433673470614831134/Uplink_-_World_Map_EU.gif", 
-              'anz':'https://cdn.discordapp.com/attachments/429801984460062720/433673374934368276/Uplink_-_World_Map_ANZ.gif'};
-var regions = Object.keys(images);
 
+
+var images = {'na': {'img':'https://cdn.discordapp.com/attachments/429801984460062720/433673377270726657/Uplink_-_World_Map_NA.gif','info':'North America'}, 
+              'eu': {'img':"https://cdn.discordapp.com/attachments/429801984460062720/433673470614831134/Uplink_-_World_Map_EU.gif",'info':"Europe"}, 
+              'anz':{'img':'https://cdn.discordapp.com/attachments/429801984460062720/433673374934368276/Uplink_-_World_Map_ANZ.gif','info':"Australia and New Zealand"}
+             };
+var regions = Object.keys(images);
+var helpEmbed;
 
 var openLobbies = new Map();
 
@@ -48,7 +52,8 @@ commands.set("!matchmake",function(message,params){
             
    var waitMilliseconds = waitTime*60000;
             
-   message.channel.send("Hey "+MMRole+", "+message.author+" Wants to get his ass handed to him:\n"+params[1]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[0].toLowerCase()]]})
+   //message.channel.send("Hey "+MMRole+", "+message.author+" Wants to get his ass handed to him:\n"+params[1]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[0].toLowerCase()]]})
+    message.channel.send(getMMEmbed(message.author,params[1],waitTime,images[userRegion]))
     .then(sent=>{
          openLobbies.set(message.author.id,sent);
          sent.delete(waitMilliseconds).then(setTimeout(function(){
@@ -87,7 +92,26 @@ commands.set("!leavemm",leavemm);
 commands.set("!leavematchmaking",leavemm);
 
 
-
+function getMMEmbed(user,steamLink,waittime,region){
+    return {"embed": {
+    "title": "Hey "+MMRole+", "+user+" wants to get his ass handed to him",
+    "description": "[click here to join lobby]("+steamLink+")",
+    "color": 12463996,
+    "image": {
+      "url": region.img
+    },
+    "fields": [
+      {
+        "name": "How long he'll supposedly have his lobby open",
+        "value": "4 minutes"
+      },
+      {
+        "name":"Region:",
+        "value": region.info
+      }
+    ]
+  }}
+}
 
 function invalidSyntax(message){
     message.reply("invalid syntax!\n!matchmake <"+regions.join()+"> <invite link> <time until close (minutes)>");
