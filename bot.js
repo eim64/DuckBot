@@ -94,8 +94,7 @@ commands.set("!leavematchmaking",leavemm);
 
 function getMMEmbed(user,steamLink,waitTime,region){
     return {"embed": {
-    "title": "click here to join lobby",
-    "url": "http://google.com",//steamLink,
+    "title": "click here to join lobby: "+steamLink,
     "color": 12463996,
     "image": {
       "url": region.img
