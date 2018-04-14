@@ -53,7 +53,7 @@ commands.set("!matchmake",function(message,params){
    var waitMilliseconds = waitTime*60000;
             
    //message.channel.send("Hey "+MMRole+", "+message.author+" Wants to get his ass handed to him:\n"+params[1]+"\nHe will supposedly close his lobby in "+waitTime+" minutes.",{files:[images[params[0].toLowerCase()]]})
-    message.channel.send(getMMEmbed(message.author,params[1],waitTime,images[userRegion]))
+    message.channel.send("Hey "+MMRole+", "+message.author+" Wants to get his ass handed to him",getMMEmbed(message.author,inviteLink,waitTime,images[userRegion]))
     .then(sent=>{
          openLobbies.set(message.author.id,sent);
          sent.delete(waitMilliseconds).then(setTimeout(function(){
@@ -92,10 +92,10 @@ commands.set("!leavemm",leavemm);
 commands.set("!leavematchmaking",leavemm);
 
 
-function getMMEmbed(user,steamLink,waittime,region){
+function getMMEmbed(user,steamLink,waitTime,region){
     return {"embed": {
-    "title": "Hey "+MMRole+", "+user+" wants to get his ass handed to him",
-    "description": "[click here to join lobby]("+steamLink+")",
+    "title": "click here to join lobby",
+    "url": steamLink,
     "color": 12463996,
     "image": {
       "url": region.img
@@ -103,7 +103,7 @@ function getMMEmbed(user,steamLink,waittime,region){
     "fields": [
       {
         "name": "How long he'll supposedly have his lobby open",
-        "value": "4 minutes"
+        "value": waitTime+" minutes"
       },
       {
         "name":"Region:",
